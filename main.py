@@ -32,7 +32,7 @@ def getInput(board):
         n = int(input("Enter a number 1 to 9\n"))
         print()
 
-        if(0<= n <= 9):
+        if(0< n <= 9):
             if(board[n - 1] == 'X' or board[n-1] == 'O'):
                 print("That square is taken, please choose another")
                 n = -1 #so that the while loop runs again
@@ -58,17 +58,130 @@ def gameOver(board):
                 and (board[3] != '4') and (board[4] != '5') and (board[5] != '6')
                 and (board[6] != '7') and (board[7] != '8') and (board[8] != '9'))
 
+def highValue(list):
+    size = len(list)
+    i = 1
+    largeIndex = 0
+    while(i < size):
+        if(list[i] > list[largeIndex]):
+            largeIndex = i
+        i += 1
+        print(largeIndex, ' ', list[largeIndex])
+    return largeIndex
+
+def calcMove(board, turn, turnNum):
+    #determine if the game has already ended
+    if(detWin(turn, board)):
+        return 3
+    elif(detWin(nextTurn(turn), board)):
+        return -3
+    elif(turnNum > 9): #tie
+        return 1
+    
+    #tries every possible move to determine overall score of the position
+    score = 0
+    if(board[0] == '1'):
+        testBoard = board.copy()
+        testBoard[0] = turn
+        #-= because it is calculating whether or not the other person wins
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[1] == '2'):
+        testBoard = board.copy()
+        testBoard[1] = turn
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[2] == '3'):
+        testBoard = board.copy()
+        testBoard[2] = turn
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[3] == '4'):
+        testBoard = board.copy()
+        testBoard[3] = turn
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[4] == '5'):
+        testBoard = board.copy()
+        testBoard[4] = turn
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[5] == '6'):
+        testBoard = board.copy()
+        testBoard[5] = turn
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[6] == '7'):
+        testBoard = board.copy()
+        testBoard[6] = turn
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[7] == '8'):
+        testBoard = board.copy()
+        testBoard[7] = turn
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[8] == '9'):
+        testBoard = board.copy()
+        testBoard[8] = turn
+        score -= calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    
+    return score
+
+def detBestMove(board, turn, turnNum):
+    scores = [-10000] * 9
+
+    if(board[0] == '1'):
+        testBoard = board.copy()
+        testBoard[0] = turn
+        scores[0] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[1] == '2'):
+        testBoard = board.copy()
+        testBoard[1] = turn
+        scores[1] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[2] == '3'):
+        testBoard = board.copy()
+        testBoard[2] = turn
+        scores[2] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[3] == '4'):
+        testBoard = board.copy()
+        testBoard[3] = turn
+        scores[3] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[4] == '5'):
+        testBoard = board.copy()
+        testBoard[4] = turn
+        scores[4] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[5] == '6'):
+        testBoard = board.copy()
+        testBoard[5] = turn
+        scores[5] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[6] == '7'):
+        testBoard = board.copy()
+        testBoard[6] = turn
+        scores[6] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[7] == '8'):
+        testBoard = board.copy()
+        testBoard[7] = turn
+        scores[7] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    if(board[8] == '9'):
+        testBoard = board.copy()
+        testBoard[8] = turn
+        scores[8] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+    
+    return highValue(scores)
+
+
+
 board = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 gameEnd = False
 turn = 'X'
+turnNum = 1
 
-while not (gameEnd):
+while not (turnNum > 9 or detWin('O', board) or detWin('X', board)):
     turn = nextTurn(turn)
     printBoard(board)
     pInput = getInput(board)
-    board[pInput - 1] = turn
 
-    gameEnd = gameOver(board)
+    if(pInput == 0):
+        pInput = detBestMove(board, turn, turnNum) + 1
+    board[pInput - 1] = turn
+    turnNum += 1
+    clearScreen()
 
 printBoard(board)
-print(turn, "'s won!", sep='')
+if(turnNum > 9):
+    print("Draw!")
+else:
+    print(turn, "'s won!", sep='')
