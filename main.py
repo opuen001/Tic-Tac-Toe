@@ -63,9 +63,9 @@ def highValue(list):
 def calcMove(board, turn, turnNum):
     #determine if the game has already ended
     if(detWin(turn, board)):
-        return 5
+        return 5 ** (11 - turnNum)
     elif(detWin(nextTurn(turn), board)):
-        return -5
+        return -5 ** (11 - turnNum)
     elif(turnNum > 9): #tie
         return 1
     
@@ -112,77 +112,47 @@ def calcMove(board, turn, turnNum):
     return score
 
 def detBestMove(board, turn, turnNum):
-    #populates a list of possible moves with -10000 so if the space is occupied
+    #populates a list of possible moves with -10^100 so if the space is occupied
     #then the scores of non-occupied squares will be higher
-    scores = [-10000] * 9
+    scores = [-10 ** 100] * 9
 
     #Checks to see if the space is open, and if so, calculates how beneficial that move would be
     if(board[0] == '1'):
         testBoard = board.copy()
         testBoard[0] = turn
-        #looks to see if this wins instantly
-        # (this will be overlooked otherwise because winning on the next move is 5pts,
-        # but potentially winning two different ways a couple moves later is 10 pts)
-        if(detWin(turn, testBoard)):
-            scores[0] = 10000
-        else:
-            scores[0] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[0] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     if(board[1] == '2'):
         testBoard = board.copy()
         testBoard[1] = turn
-        if(detWin(turn, testBoard)):
-            scores[1] = 10000
-        else:
-            scores[1] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[1] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     if(board[2] == '3'):
         testBoard = board.copy()
         testBoard[2] = turn
-        if(detWin(turn, testBoard)):
-            scores[2] = 10000
-        else:
-            scores[2] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[2] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     if(board[3] == '4'):
         testBoard = board.copy()
         testBoard[3] = turn
-        if(detWin(turn, testBoard)):
-            scores[3] = 10000
-        else:
-            scores[3] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[3] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     if(board[4] == '5'):
         testBoard = board.copy()
         testBoard[4] = turn
-        if(detWin(turn, testBoard)):
-            scores[4] = 10000
-        else:
-            scores[4] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[4] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     if(board[5] == '6'):
         testBoard = board.copy()
         testBoard[5] = turn
-        if(detWin(turn, testBoard)):
-            scores[5] = 10000
-        else:
-            scores[5] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[5] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     if(board[6] == '7'):
         testBoard = board.copy()
         testBoard[6] = turn
-        if(detWin(turn, testBoard)):
-            scores[6] = 10000
-        else:
-            scores[6] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[6] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     if(board[7] == '8'):
         testBoard = board.copy()
         testBoard[7] = turn
-        if(detWin(turn, testBoard)):
-            scores[7] = 10000
-        else:
-            scores[7] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[7] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     if(board[8] == '9'):
         testBoard = board.copy()
         testBoard[8] = turn
-        if(detWin(turn, testBoard)):
-            scores[8] = 10000
-        else:
-            scores[8] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
+        scores[8] = -1* calcMove(testBoard, nextTurn(turn), turnNum + 1)
     
     return highValue(scores)
 
