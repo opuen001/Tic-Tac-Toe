@@ -29,11 +29,11 @@ def getInput(board):
     n = -1
 
     while (0 > n or n > 9):
-        n = int(input("Enter a number 1 to 9\n"))
+        n = int(input("Enter a number 1 to 9 to choose a square, or enter 0 to have the computer make a move\n"))
         print()
 
         if(0< n <= 9):
-            if(board[n - 1] == 'X' or board[n-1] == 'O'):
+            if(board[n - 1] == 'X' or board[n - 1] == 'O'):
                 print("That square is taken, please choose another")
                 n = -1 #so that the while loop runs again
             
@@ -50,14 +50,6 @@ def nextTurn(turn):
     else:
         return 'O'
 
-def gameOver(board):
-    if(detWin('O', board) or detWin('X', board)):
-        return True
-    else:
-        return ((board[0] != '1') and (board[1] != '2') and (board[2] != '3')
-                and (board[3] != '4') and (board[4] != '5') and (board[5] != '6')
-                and (board[6] != '7') and (board[7] != '8') and (board[8] != '9'))
-
 def highValue(list):
     size = len(list)
     i = 1
@@ -66,15 +58,14 @@ def highValue(list):
         if(list[i] > list[largeIndex]):
             largeIndex = i
         i += 1
-        print(largeIndex, ' ', list[largeIndex])
     return largeIndex
 
 def calcMove(board, turn, turnNum):
     #determine if the game has already ended
     if(detWin(turn, board)):
-        return 3
+        return 5 ** (11 - turnNum)
     elif(detWin(nextTurn(turn), board)):
-        return -3
+        return -5 ** (11 - turnNum)
     elif(turnNum > 9): #tie
         return 1
     
@@ -121,8 +112,11 @@ def calcMove(board, turn, turnNum):
     return score
 
 def detBestMove(board, turn, turnNum):
-    scores = [-10000] * 9
+    #populates a list of possible moves with -10^100 so if the space is occupied
+    #then the scores of non-occupied squares will be higher
+    scores = [-10 ** 100] * 9
 
+    #Checks to see if the space is open, and if so, calculates how beneficial that move would be
     if(board[0] == '1'):
         testBoard = board.copy()
         testBoard[0] = turn
@@ -165,7 +159,6 @@ def detBestMove(board, turn, turnNum):
 
 
 board = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-gameEnd = False
 turn = 'X'
 turnNum = 1
 
